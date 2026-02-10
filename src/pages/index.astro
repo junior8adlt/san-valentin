@@ -1,0 +1,317 @@
+---
+const colors = [
+  '#e31b52','#c62828','#d32f2f','#e53935','#ef5350',
+  '#f44336','#ff1744','#ff4081','#c0354a','#b71c1c',
+  '#ad1457','#d81b60','#e91e63','#ff5252','#cc2244','#a8203a'
+];
+
+const canopyHearts: {x:number,y:number,size:number,color:string,delay:number}[] = [];
+const cx = 220;
+const cy = 200;
+
+// 4 layers of heart outline for max density
+for (let layer = 0; layer < 4; layer++) {
+  const count = 80;
+  const scaleBase = 6 + layer * 3.5;
+  for (let i = 0; i < count; i++) {
+    const t = (i / count) * Math.PI * 2;
+    const hxRaw = 16 * Math.pow(Math.sin(t), 3);
+    const hyRaw = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+    const scale = scaleBase + Math.random() * 2.5;
+    const x = cx + hxRaw * scale + (Math.random() - 0.5) * 22;
+    const y = cy + hyRaw * scale + (Math.random() - 0.5) * 18;
+    const size = 13 + Math.random() * 24;
+    canopyHearts.push({ x, y, size, color: colors[Math.floor(Math.random()*colors.length)], delay: 1.0 + Math.random()*1.8 });
+  }
+}
+
+// Dense interior fill
+for (let i = 0; i < 100; i++) {
+  const angle = Math.random() * Math.PI * 2;
+  const r = Math.random() * 120;
+  const x = cx + Math.cos(angle) * r + (Math.random()-0.5)*15;
+  const y = cy + Math.sin(angle) * r * 0.85 + 10;
+  const size = 10 + Math.random() * 26;
+  canopyHearts.push({ x, y, size, color: colors[Math.floor(Math.random()*colors.length)], delay: 1.2 + Math.random()*2.2 });
+}
+
+// Extra hearts near trunk connection to fill the gap
+for (let i = 0; i < 30; i++) {
+  const x = cx + (Math.random()-0.5) * 60;
+  const y = cy + 100 + Math.random() * 80;
+  const size = 12 + Math.random() * 20;
+  canopyHearts.push({ x, y, size, color: colors[Math.floor(Math.random()*colors.length)], delay: 1.3 + Math.random()*1.5 });
+}
+---
+
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>San Valentín</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- STATE 1 -->
+  <div class="state-initial" id="stateInitial">
+    <div class="bg-particles" id="bgParticles1"></div>
+    <div class="heart-wrapper" id="heartClick">
+      <div class="main-heart">❤</div>
+      <div class="heart-label">San Valentín</div>
+      <div class="click-hint">☝ Toca aquí</div>
+    </div>
+  </div>
+
+  <!-- STATE 2 -->
+  <div class="state-tree hidden" id="stateTree">
+    <div class="falling-heart" id="fallingHeart">❤</div>
+
+    <div class="tree-wrap" id="treeWrap">
+      <div class="trunk"></div>
+      <div class="tbranch tb1"></div>
+      <div class="tbranch tb2"></div>
+      <div class="tbranch tb3"></div>
+      <div class="tbranch tb4"></div>
+
+      <div class="canopy">
+        {canopyHearts.map((h) => (
+          <span
+            class="ch"
+            style={`left:${h.x}px;top:${h.y}px;font-size:${h.size}px;color:${h.color};animation-delay:${h.delay}s`}
+          >❤</span>
+        ))}
+      </div>
+    </div>
+
+    <div class="love-text" id="loveText">
+      <p class="tl tl1">Para el amor de mi vida:</p>
+      <p class="tl tl2">Si pudiera elegir un lugar<br/>seguro, sería a tu lado.</p>
+      <p class="tl tl3">Cuanto más tiempo estoy<br/>contigo más te amo.</p>
+      <p class="tl tl4">— I Love You!</p>
+    </div>
+
+    <div class="counter" id="counter">
+      <p class="cl">Mi amor por ti comenzó hace...</p>
+      <p class="ct" id="ct"></p>
+    </div>
+  </div>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      width:100vw;height:100vh;overflow:hidden;
+      font-family:'Playfair Display',Georgia,serif;
+      background:linear-gradient(160deg,#fdf2f0,#f8e1dc 30%,#f2d0ca 60%,#ecc4bd);
+      color:#4a2028;
+    }
+
+    /* STATE 1 */
+    .state-initial{
+      position:fixed;inset:0;z-index:10;
+      display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(160deg,#fdf2f0,#f8e1dc 30%,#f2d0ca 60%,#ecc4bd);
+      transition:opacity .8s ease;
+    }
+    .state-initial.fade-out{opacity:0;pointer-events:none}
+    .state-initial.gone{display:none}
+
+    .bg-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+    .bp{position:absolute;color:rgba(220,80,100,.25);animation:pFloat linear infinite}
+    @keyframes pFloat{
+      0%{transform:translateY(100vh) rotate(0);opacity:0}
+      10%{opacity:.6}90%{opacity:.6}
+      100%{transform:translateY(-10vh) rotate(360deg);opacity:0}
+    }
+
+    .heart-wrapper{
+      display:flex;flex-direction:column;align-items:center;
+      cursor:pointer;user-select:none;z-index:2;
+      animation:pulse 1.5s ease-in-out infinite;
+    }
+    .main-heart{font-size:7rem;color:#e31b52;line-height:1;filter:drop-shadow(0 4px 25px rgba(220,40,80,.5))}
+    .heart-label{font-family:'Dancing Script',cursive;font-size:2.4rem;font-weight:700;margin-top:.5rem;color:#c0354a}
+    .click-hint{margin-top:1.2rem;font-size:.9rem;color:#a05060;animation:blink 2s ease-in-out infinite}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+    @keyframes blink{0%,100%{opacity:.4}50%{opacity:1}}
+
+    /* STATE 2 */
+    .state-tree{position:fixed;inset:0;z-index:10}
+    .state-tree.hidden{display:none}
+
+    /* Falling heart - falls to near bottom */
+    .falling-heart{
+      position:absolute;top:45%;left:50%;
+      transform:translate(-50%,-50%);
+      font-size:5rem;color:#e31b52;z-index:20;opacity:0;
+      filter:drop-shadow(0 4px 15px rgba(220,40,80,.5));
+    }
+    .falling-heart.go{animation:hfall 1.5s cubic-bezier(.55,0,1,.45) forwards}
+    @keyframes hfall{
+      0%{top:45%;transform:translate(-50%,-50%) scale(1);opacity:1}
+      65%{top:88%;transform:translate(-50%,-50%) scale(.7);opacity:1}
+      75%{top:84%;transform:translate(-50%,-50%) scale(.8);opacity:1}
+      85%{top:88%;transform:translate(-50%,-50%) scale(.5) rotate(10deg);opacity:1}
+      95%{top:88%;transform:translate(-50%,-50%) scale(.2) rotate(15deg);opacity:.5}
+      100%{top:88%;transform:translate(-50%,-50%) scale(0) rotate(20deg);opacity:0}
+    }
+
+    /* Tree - slightly right of center */
+    .tree-wrap{
+      position:absolute;bottom:0;left:50%;transform:translateX(-25%);
+      width:440px;height:580px;
+      opacity:0;z-index:15;
+    }
+    .tree-wrap.grow{animation:tgrow 1.2s cubic-bezier(.2,.8,.3,1) forwards}
+    @keyframes tgrow{
+      0%{opacity:0;transform:translateX(-25%) scaleY(0);transform-origin:bottom center}
+      40%{opacity:1}
+      100%{opacity:1;transform:translateX(-25%) scaleY(1);transform-origin:bottom center}
+    }
+
+    .trunk{
+      position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+      width:26px;height:280px;
+      background:linear-gradient(to right,#5a3020,#8B5E3C,#6b3a2a);
+      border-radius:6px;
+    }
+    .tbranch{position:absolute;background:linear-gradient(to top,#6b3a2a,#8B5E3C);border-radius:4px;transform-origin:bottom center}
+    .tb1{bottom:175px;left:calc(50% - 9px);width:10px;height:85px;transform:rotate(30deg)}
+    .tb2{bottom:195px;left:calc(50% + 1px);width:10px;height:90px;transform:rotate(-25deg)}
+    .tb3{bottom:225px;left:calc(50% - 15px);width:8px;height:60px;transform:rotate(48deg)}
+    .tb4{bottom:235px;left:calc(50% + 8px);width:8px;height:55px;transform:rotate(-42deg)}
+
+    /* Canopy */
+    .canopy{position:absolute;top:0;left:0;width:440px;height:400px}
+    .ch{position:absolute;line-height:1;opacity:0;filter:drop-shadow(0 1px 3px rgba(0,0,0,.12))}
+    .tree-wrap.grow .ch{animation:bloom .5s ease forwards}
+    @keyframes bloom{
+      0%{opacity:0;transform:scale(0) rotate(-20deg)}
+      70%{transform:scale(1.2) rotate(5deg)}
+      100%{opacity:1;transform:scale(1) rotate(0)}
+    }
+
+    /* Love text */
+    .love-text{position:absolute;top:12%;left:5%;max-width:320px;z-index:16}
+    .tl{font-size:1.15rem;font-weight:500;line-height:1.6;margin-bottom:1.1rem;color:#3a1520;opacity:0;transform:translateX(-15px)}
+    .tl.show{animation:trev .9s ease forwards}
+    .tl1{font-style:italic;color:#4a2030}
+    .tl4{font-family:'Dancing Script',cursive;font-size:2rem;font-weight:700;color:#c0354a;margin-top:.5rem}
+    @keyframes trev{0%{opacity:0;transform:translateX(-15px)}100%{opacity:1;transform:translateX(0)}}
+
+    /* Counter */
+    .counter{position:absolute;bottom:4%;left:5%;z-index:16;opacity:0}
+    .counter.show{animation:fup 1s ease forwards}
+    .cl{font-size:1rem;color:#5a2a35;margin-bottom:.3rem}
+    .ct{font-family:'Dancing Script',cursive;font-size:1.4rem;font-weight:700;color:#c0354a}
+    .ct b{font-size:1.7rem;color:#e31b52;margin:0 2px}
+    @keyframes fup{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+
+    /* Responsive */
+    @media(max-width:768px){
+      .main-heart{font-size:5rem}
+      .heart-label{font-size:1.8rem}
+      .tree-wrap{width:300px;height:420px;left:50%;transform:translateX(-20%)}
+      .canopy{width:300px;height:280px}
+      .ch{font-size:.7em !important}
+      .trunk{height:200px;width:20px}
+      .love-text{top:5%;left:4%;max-width:42%}
+      .tl{font-size:.92rem;margin-bottom:.8rem}
+      .tl4{font-size:1.4rem}
+      .ct{font-size:1.1rem}
+      .ct b{font-size:1.3rem}
+    }
+  </style>
+
+  <script>
+    // BG particles for state 1
+    const pc=document.getElementById('bgParticles1');
+    for(let i=0;i<15;i++){
+      const p=document.createElement('div');
+      p.className='bp';p.textContent='♥';
+      p.style.left=Math.random()*100+'%';
+      p.style.fontSize=(12+Math.random()*18)+'px';
+      p.style.animationDuration=(10+Math.random()*15)+'s';
+      p.style.animationDelay=-(Math.random()*20)+'s';
+      pc?.appendChild(p);
+    }
+
+    const startDate=new Date('2020-06-14T00:00:00');
+    const si=document.getElementById('stateInitial');
+    const st=document.getElementById('stateTree');
+    const fh=document.getElementById('fallingHeart');
+    const tw=document.getElementById('treeWrap');
+    const lt=document.getElementById('loveText');
+    const co=document.getElementById('counter');
+
+    document.getElementById('heartClick')?.addEventListener('click',()=>{
+      si?.classList.add('fade-out');
+      // Completely remove state1 after fade so particles disappear
+      setTimeout(()=>si?.classList.add('gone'),900);
+
+      setTimeout(()=>{st?.classList.remove('hidden');fh?.classList.add('go')},500);
+      setTimeout(()=>tw?.classList.add('grow'),2000);
+      lt?.querySelectorAll('.tl').forEach((l,i)=>setTimeout(()=>l.classList.add('show'),3800+i*900));
+      setTimeout(()=>{co?.classList.add('show');tick();setInterval(tick,1000)},7500);
+      setTimeout(spawnLoop,5000);
+    });
+
+    function tick(){
+      const d=Date.now()-startDate.getTime();
+      const el=document.getElementById('ct');
+      if(!el)return;
+      const dd=Math.floor(d/864e5);
+      const hh=Math.floor((d%864e5)/36e5);
+      const mm=Math.floor((d%36e5)/6e4);
+      const ss=Math.floor((d%6e4)/1e3);
+      el.innerHTML=`<b>${dd}</b> días <b>${hh}</b> horas <b>${String(mm).padStart(2,'0')}</b> minutos <b>${String(ss).padStart(2,'0')}</b> segundos`;
+    }
+
+    function spawnLoop(){
+      setInterval(()=>{
+        if(!tw)return;
+        const r=tw.getBoundingClientRect();
+        if(r.width===0)return;
+
+        const el=document.createElement('div');
+        el.textContent='❤';
+        el.style.position='fixed';
+        el.style.pointerEvents='none';
+        el.style.zIndex='50';
+        el.style.lineHeight='1';
+
+        // Start position: random spot on the canopy area
+        const startX=r.left+r.width*.15+Math.random()*r.width*.6;
+        const startY=r.top+20+Math.random()*r.height*.35;
+        el.style.left=startX+'px';
+        el.style.top=startY+'px';
+        el.style.fontSize=(14+Math.random()*16)+'px';
+
+        const c=['#e31b52','#c62828','#ff4081','#d32f2f','#e91e63','#ff1744'];
+        el.style.color=c[Math.floor(Math.random()*c.length)];
+
+        document.body.appendChild(el);
+
+        // Each heart gets a UNIQUE random trajectory - travels far to bottom-left
+        const dx=-200-Math.random()*500;  // far left
+        const dy=150+Math.random()*350;   // far down
+        const rot=-40-Math.random()*150;
+        const dur=6000+Math.random()*4000;
+
+        el.animate([
+          {transform:'translate(0,0) rotate(0deg)',opacity:1},
+          {transform:`translate(${dx*.2}px,${dy*.2}px) rotate(${rot*.2}deg)`,opacity:.85},
+          {transform:`translate(${dx*.45}px,${dy*.45}px) rotate(${rot*.45}deg)`,opacity:.6},
+          {transform:`translate(${dx*.7}px,${dy*.7}px) rotate(${rot*.7}deg)`,opacity:.35},
+          {transform:`translate(${dx}px,${dy}px) rotate(${rot}deg)`,opacity:0}
+        ],{duration:dur,easing:'ease-in',fill:'forwards'});
+
+        setTimeout(()=>el.remove(),dur+100);
+      },600);
+    }
+  </script>
+</body>
+</html>
