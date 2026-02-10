@@ -105,10 +105,86 @@ for (let i = 0; i < 30; i++) {
         <p class="mt mt4">— I Love You!</p>
       </div>
 
+      <!-- SVG heart draw animation -->
+      <div class="mob-svg-wrap" id="mobSvg">
+        <svg viewBox="0 0 200 180" class="mob-svg-heart">
+          <!-- Heart outline that draws itself -->
+          <path class="svg-heart-path" d="M100,170 C40,120 0,80 0,50 C0,20 20,0 50,0 C70,0 90,15 100,35 C110,15 130,0 150,0 C180,0 200,20 200,50 C200,80 160,120 100,170Z"
+            fill="none" stroke="#e31b52" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Fill heart (appears after stroke) -->
+          <path class="svg-heart-fill" d="M100,170 C40,120 0,80 0,50 C0,20 20,0 50,0 C70,0 90,15 100,35 C110,15 130,0 150,0 C180,0 200,20 200,50 C200,80 160,120 100,170Z"
+            fill="#e31b52" stroke="none" opacity="0"/>
+        </svg>
+        <p class="svg-label svg-link" id="svgLink">y nuestro amor creció<br/>tanto que ahora... <span class="svg-arrow">↓</span></p>
+      </div>
+
       <div class="mob-counter" id="mobCounter">
         <p class="mob-cl">Mi amor por ti comenzó hace...</p>
         <p class="mob-ct" id="mobCt"></p>
       </div>
+    </div>
+  </div>
+
+  <!-- STATE 3: Baby Reveal (mobile) -->
+  <div class="baby-state hidden" id="babyState">
+
+    <!-- Concept 1: El Latido -->
+    <div class="baby-scene" id="baby1">
+      <div class="b1-sparks" id="b1Sparks"></div>
+      <div class="b1-wrap">
+        <svg class="b1-ecg" viewBox="0 0 320 80">
+          <path class="b1-line" d="M0,40 L75,40 L84,36 L92,40 L100,40 L107,20 L114,60 L118,6 L122,66 L129,28 L137,40 L178,40 L186,36 L194,40 L202,40 L209,20 L216,60 L220,6 L224,66 L231,28 L239,40 L320,40"
+            fill="none" stroke="rgba(232,170,185,.65)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p class="b1-t1">En unas semanas nacerá</p>
+        <p class="b1-t2">nuestro más grande amor</p>
+        <p class="b1-name">Paulo Alberto</p>
+        <div class="b1-heart">❤</div>
+      </div>
+    </div>
+
+    <!-- Concept 2: Estrellas -->
+    <div class="baby-scene" id="baby2">
+      <canvas id="b2Canvas"></canvas>
+      <div class="b2-wrap">
+        <p class="b2-t1">En unas semanas nacerá</p>
+        <p class="b2-t2">nuestro más grande amor</p>
+        <div class="b2-glow"></div>
+        <p class="b2-name">Paulo Alberto</p>
+        <div class="b2-heart">❤</div>
+        <p class="b2-sub">Te esperamos</p>
+      </div>
+    </div>
+
+    <!-- Concept 3: Floreciendo -->
+    <div class="baby-scene" id="baby3">
+      <div class="b3-dust" id="b3Dust"></div>
+      <div class="b3-wrap">
+        <p class="b3-t1">En unas semanas nacerá</p>
+        <p class="b3-t2">nuestro más grande amor</p>
+        <div class="b3-flower-area">
+          <svg class="b3-flower" viewBox="0 0 200 200">
+            <g transform="translate(100,100)">
+              <g transform="rotate(0)"><ellipse class="b3-p" style="--pd:0s" cx="0" cy="-40" rx="20" ry="40" fill="#b4d4f0"/></g>
+              <g transform="rotate(60)"><ellipse class="b3-p" style="--pd:.18s" cx="0" cy="-40" rx="20" ry="40" fill="#a0c8ec"/></g>
+              <g transform="rotate(120)"><ellipse class="b3-p" style="--pd:.36s" cx="0" cy="-40" rx="20" ry="40" fill="#8ebce4"/></g>
+              <g transform="rotate(180)"><ellipse class="b3-p" style="--pd:.54s" cx="0" cy="-40" rx="20" ry="40" fill="#a0c8ec"/></g>
+              <g transform="rotate(240)"><ellipse class="b3-p" style="--pd:.72s" cx="0" cy="-40" rx="20" ry="40" fill="#b4d4f0"/></g>
+              <g transform="rotate(300)"><ellipse class="b3-p" style="--pd:.9s" cx="0" cy="-40" rx="20" ry="40" fill="#8ebce4"/></g>
+              <circle class="b3-ctr" cx="0" cy="0" r="14" fill="#d4a574" opacity="0"/>
+            </g>
+          </svg>
+        </div>
+        <p class="b3-name">Paulo Alberto</p>
+        <p class="b3-sub">Muy pronto...</p>
+      </div>
+    </div>
+
+    <!-- Option buttons -->
+    <div class="baby-opts">
+      <button class="bopt active" data-v="1">El Latido</button>
+      <button class="bopt" data-v="2">Estrellas</button>
+      <button class="bopt" data-v="3">Floreciendo</button>
     </div>
   </div>
 
@@ -262,7 +338,7 @@ for (let i = 0; i < 30; i++) {
     @keyframes mgPulse{0%,100%{opacity:.3;transform:translate(-50%,-50%) scale(1)}50%{opacity:.7;transform:translate(-50%,-50%) scale(1.5)}}
 
     /* Mobile text */
-    .mob-text{text-align:center;margin-bottom:auto}
+    .mob-text{text-align:center;margin-bottom:.5rem}
     .mt{
       font-size:1.05rem;font-weight:500;line-height:1.55;
       margin-bottom:.85rem;color:#3a1520;
@@ -284,9 +360,235 @@ for (let i = 0; i < 30; i++) {
     .mob-ct b{font-size:1.35rem;color:#e31b52;margin:0 1px}
     @keyframes mcIn{0%{opacity:0;transform:translateY(15px)}100%{opacity:1;transform:translateY(0)}}
 
+    /* SVG heart drawing */
+    .mob-svg-wrap{
+      opacity:0;margin:1.2rem 0;display:flex;flex-direction:column;align-items:center;
+      transition:opacity .6s ease;
+    }
+    .mob-svg-wrap.show{opacity:1}
+    .mob-svg-heart{width:120px;height:110px}
+    .svg-heart-path{
+      stroke-dasharray:600;stroke-dashoffset:600;
+      filter:drop-shadow(0 0 6px rgba(227,27,82,.35));
+    }
+    .mob-svg-wrap.show .svg-heart-path{
+      animation:svgDraw 2.5s cubic-bezier(.4,0,.2,1) forwards;
+    }
+    @keyframes svgDraw{
+      0%{stroke-dashoffset:600}
+      100%{stroke-dashoffset:0}
+    }
+    .mob-svg-wrap.show .svg-heart-fill{
+      animation:svgFill 1.2s ease .2s forwards;
+    }
+    @keyframes svgFill{
+      0%{opacity:0}
+      100%{opacity:.13}
+    }
+    .svg-label{
+      font-family:'Dancing Script',cursive;font-size:1.4rem;font-weight:700;
+      color:#c0354a;margin-top:.5rem;
+      opacity:0;transform:translateY(8px);
+    }
+    .mob-svg-wrap.show .svg-label{
+      animation:svgLabel .8s ease 2s forwards;
+    }
+    @keyframes svgLabel{
+      0%{opacity:0;transform:translateY(8px)}
+      100%{opacity:1;transform:translateY(0)}
+    }
+
+    /* SVG link clickable */
+    .svg-link{cursor:pointer;text-align:center;line-height:1.6;font-size:1.15rem}
+    .svg-link:active{transform:scale(.95)}
+    .svg-arrow{display:inline-block;font-size:.75rem;color:#e31b52;margin-left:.15rem;animation:arrBounce 1.5s ease-in-out infinite}
+    @keyframes arrBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+    /* ============ STATE 3: BABY REVEAL ============ */
+    .baby-state{position:fixed;inset:0;z-index:20;opacity:0;transition:opacity 1.2s ease}
+    .baby-state.hidden{display:none}
+    .baby-state.show{opacity:1}
+    .baby-scene{
+      position:absolute;inset:0;
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;transition:opacity .5s ease;pointer-events:none;
+    }
+    .baby-scene.active{opacity:1;pointer-events:auto}
+
+    /* Option buttons */
+    .baby-opts{
+      position:fixed;bottom:0;left:0;right:0;z-index:30;
+      display:flex;align-items:center;justify-content:center;gap:.6rem;
+      padding:1rem 0 max(1.4rem,env(safe-area-inset-bottom));
+      background:linear-gradient(to top,rgba(0,0,0,.55) 0%,rgba(0,0,0,.15) 70%,transparent);
+    }
+    .bopt{
+      background:rgba(255,255,255,.1);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.7);
+      padding:.4rem 1rem;border-radius:20px;
+      font-family:'Playfair Display',serif;font-size:.72rem;
+      cursor:pointer;transition:all .3s ease;letter-spacing:.3px;
+    }
+    .bopt.active{background:rgba(255,255,255,.25);color:#fff;border-color:rgba(255,255,255,.4)}
+
+    /* ----- Concept 1: El Latido ----- */
+    #baby1{background:linear-gradient(170deg,#1a0a10 0%,#2a1520 50%,#1e0e15 100%)}
+    .b1-sparks{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+    .b1-sp{
+      position:absolute;border-radius:50%;
+      background:radial-gradient(circle,#d4a574,#c9966e);
+      animation:b1Up linear infinite;
+    }
+    @keyframes b1Up{
+      0%{transform:translateY(0) scale(0);opacity:0}
+      12%{opacity:.65;transform:translateY(-8vh) scale(1)}
+      85%{opacity:.4}
+      100%{transform:translateY(-105vh) scale(.15);opacity:0}
+    }
+    .b1-wrap{display:flex;flex-direction:column;align-items:center;padding:0 10%;width:100%}
+    .b1-ecg{width:88%;max-width:310px;height:auto;margin-bottom:2rem;opacity:0}
+    #baby1.active .b1-ecg{animation:bFadeIn .6s ease .3s forwards}
+    .b1-line{
+      stroke-dasharray:900;stroke-dashoffset:900;
+      filter:drop-shadow(0 0 8px rgba(232,170,185,.5));
+    }
+    #baby1.active .b1-line{animation:b1Draw 3s cubic-bezier(.3,0,.2,1) .5s forwards}
+    @keyframes b1Draw{to{stroke-dashoffset:0}}
+    .b1-t1,.b1-t2{
+      font-family:'Playfair Display',serif;text-align:center;
+      color:rgba(232,185,195,.8);opacity:0;transform:translateY(10px);
+    }
+    .b1-t1{font-size:.95rem;font-style:italic;margin-bottom:.3rem}
+    .b1-t2{font-size:1rem;margin-bottom:2rem}
+    #baby1.active .b1-t1{animation:bSlideUp .8s ease 3.2s forwards}
+    #baby1.active .b1-t2{animation:bSlideUp .8s ease 3.7s forwards}
+    @keyframes bSlideUp{to{opacity:1;transform:translateY(0)}}
+    .b1-name{
+      font-family:'Dancing Script',cursive;font-size:2.8rem;font-weight:700;
+      color:#d4a574;text-align:center;opacity:0;transform:scale(.8);
+      text-shadow:0 0 30px rgba(212,165,116,.4),0 0 60px rgba(212,165,116,.15);
+    }
+    #baby1.active .b1-name{animation:bNameIn 1.5s cubic-bezier(.2,.8,.3,1) 4.5s forwards}
+    @keyframes bNameIn{
+      0%{opacity:0;transform:scale(.8)}
+      60%{opacity:1;transform:scale(1.06)}
+      100%{opacity:1;transform:scale(1)}
+    }
+    .b1-heart{
+      font-size:1.4rem;color:#e31b52;margin-top:1rem;opacity:0;
+      filter:drop-shadow(0 0 10px rgba(227,27,82,.5));
+    }
+    #baby1.active .b1-heart{animation:bFadeIn .5s ease 5.8s forwards,bBeat 1.5s ease-in-out 6.3s infinite}
+    @keyframes bBeat{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
+    @keyframes bFadeIn{to{opacity:1}}
+
+    /* ----- Concept 2: Estrellas ----- */
+    #baby2{background:linear-gradient(170deg,#060a18 0%,#0c1230 50%,#080e20 100%)}
+    #b2Canvas{position:absolute;inset:0;width:100%;height:100%}
+    .b2-wrap{
+      position:relative;z-index:2;
+      display:flex;flex-direction:column;align-items:center;
+      padding:0 10%;width:100%;
+    }
+    .b2-t1,.b2-t2{
+      font-family:'Playfair Display',serif;text-align:center;
+      color:rgba(200,210,235,.8);opacity:0;transform:translateY(10px);
+    }
+    .b2-t1{font-size:.95rem;font-style:italic;margin-bottom:.3rem}
+    .b2-t2{font-size:1rem;margin-bottom:1.5rem}
+    #baby2.active .b2-t1{animation:bSlideUp .8s ease .8s forwards}
+    #baby2.active .b2-t2{animation:bSlideUp .8s ease 1.3s forwards}
+    .b2-glow{
+      width:130px;height:130px;border-radius:50%;margin-bottom:.8rem;
+      background:radial-gradient(circle,rgba(212,165,116,.35) 0%,rgba(212,165,116,.08) 45%,transparent 70%);
+      opacity:0;transform:scale(0);
+    }
+    #baby2.active .b2-glow{animation:b2Glow 2s cubic-bezier(.2,.8,.3,1) 2s forwards}
+    @keyframes b2Glow{
+      0%{opacity:0;transform:scale(0)}
+      50%{opacity:1;transform:scale(1.4)}
+      100%{opacity:.7;transform:scale(1)}
+    }
+    .b2-name{
+      font-family:'Dancing Script',cursive;font-size:2.8rem;font-weight:700;
+      color:#e8c98e;text-align:center;opacity:0;transform:scale(.8);
+      text-shadow:0 0 25px rgba(232,201,142,.4),0 0 50px rgba(232,201,142,.15);
+    }
+    #baby2.active .b2-name{animation:b2Name 1.5s cubic-bezier(.2,.8,.3,1) 3.2s forwards}
+    @keyframes b2Name{
+      0%{opacity:0;transform:scale(.8);filter:blur(6px)}
+      50%{opacity:1;filter:blur(0)}
+      75%{transform:scale(1.06)}
+      100%{opacity:1;transform:scale(1);filter:blur(0)}
+    }
+    .b2-heart{font-size:1.2rem;color:#ff6b8a;margin-top:.8rem;opacity:0}
+    #baby2.active .b2-heart{animation:bFadeIn .5s ease 4.4s forwards,bBeat 1.5s ease-in-out 4.9s infinite}
+    .b2-sub{
+      font-family:'Dancing Script',cursive;font-size:1.15rem;
+      color:rgba(200,210,235,.5);margin-top:.4rem;opacity:0;
+    }
+    #baby2.active .b2-sub{animation:bSlideUp .8s ease 5s forwards}
+
+    /* ----- Concept 3: Floreciendo ----- */
+    #baby3{background:linear-gradient(160deg,#fdf2f0,#f8e1dc 30%,#f2d0ca 60%,#ecc4bd)}
+    .b3-dust{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+    .b3-dt{
+      position:absolute;border-radius:50%;
+      background:radial-gradient(circle,#d4a574,#c9966e);
+      animation:b3Up linear infinite;
+    }
+    @keyframes b3Up{
+      0%{transform:translateY(0) scale(0);opacity:0}
+      15%{opacity:.55;transform:translateY(-6vh) scale(1)}
+      80%{opacity:.35}
+      100%{transform:translateY(-90vh) scale(.12);opacity:0}
+    }
+    .b3-wrap{
+      position:relative;z-index:2;
+      display:flex;flex-direction:column;align-items:center;
+      padding:0 10%;width:100%;
+    }
+    .b3-t1,.b3-t2{
+      font-family:'Playfair Display',serif;text-align:center;
+      color:#3a1520;opacity:0;transform:translateY(10px);
+    }
+    .b3-t1{font-size:.95rem;font-style:italic;margin-bottom:.3rem}
+    .b3-t2{font-size:1rem;margin-bottom:1.5rem}
+    #baby3.active .b3-t1{animation:bSlideUp .8s ease .5s forwards}
+    #baby3.active .b3-t2{animation:bSlideUp .8s ease 1s forwards}
+    .b3-flower-area{width:150px;height:150px;margin-bottom:1rem;opacity:0}
+    #baby3.active .b3-flower-area{animation:bFadeIn .5s ease 1.5s forwards}
+    .b3-flower{width:100%;height:100%}
+    .b3-p{
+      opacity:0;
+      transform-origin:50% 100%;transform-box:fill-box;
+    }
+    #baby3.active .b3-p{
+      animation:b3Bloom .8s cubic-bezier(.2,.8,.3,1) forwards;
+      animation-delay:calc(var(--pd) + 1.8s);
+    }
+    @keyframes b3Bloom{
+      0%{opacity:0;transform:scaleY(0) scaleX(.5)}
+      60%{opacity:.85;transform:scaleY(1.1) scaleX(1.05)}
+      100%{opacity:.8;transform:scaleY(1) scaleX(1)}
+    }
+    .b3-ctr{opacity:0}
+    #baby3.active .b3-ctr{animation:bFadeIn .4s ease 3.2s forwards}
+    .b3-name{
+      font-family:'Dancing Script',cursive;font-size:2.8rem;font-weight:700;
+      color:#c0354a;text-align:center;opacity:0;transform:scale(.8);
+      text-shadow:0 0 20px rgba(192,53,74,.15);
+    }
+    #baby3.active .b3-name{animation:bNameIn 1.2s cubic-bezier(.2,.8,.3,1) 3.5s forwards}
+    .b3-sub{
+      font-family:'Dancing Script',cursive;font-size:1.1rem;
+      color:#8a4050;margin-top:.5rem;opacity:0;
+    }
+    #baby3.active .b3-sub{animation:bSlideUp .8s ease 4.5s forwards}
+
     /* Hide mobile state on desktop */
     @media(min-width:481px){
-      .mob-state{display:none !important}
+      .mob-state,.baby-state{display:none !important}
     }
   </style>
 
@@ -386,11 +688,18 @@ for (let i = 0; i < 30; i++) {
         setTimeout(()=>l.classList.add('show'),2400+i*1000);
       });
 
+      // SVG heart draw
+      const svgW=document.getElementById('mobSvg');
+      setTimeout(()=>svgW?.classList.add('show'),5800);
+
+      // SVG link → baby reveal
+      document.getElementById('svgLink')?.addEventListener('click',()=>showBabyReveal());
+
       // Counter
       setTimeout(()=>{
         mc?.classList.add('show');
         startTick('mobCt');
-      },6800);
+      },8200);
 
       // Periodic confetti bursts
       setTimeout(()=>setInterval(fireConfetti,5000),3000);
@@ -476,6 +785,137 @@ for (let i = 0; i < 30; i++) {
       }
       animate();
     }
+
+    // ===== BABY REVEAL =====
+    let b2Raf=0;
+    let curBaby=0;
+
+    function showBabyReveal(){
+      const mobSt=document.getElementById('mobState');
+      if(mobSt){
+        mobSt.style.transition='opacity 1s ease';
+        mobSt.style.opacity='0';
+        setTimeout(()=>{mobSt.classList.add('hidden');mobSt.style.opacity=''},1000);
+      }
+      const bs=document.getElementById('babyState');
+      setTimeout(()=>{
+        if(!bs)return;
+        bs.classList.remove('hidden');
+        requestAnimationFrame(()=>bs.classList.add('show'));
+        switchBaby(1);
+      },800);
+    }
+
+    function switchBaby(n:number){
+      if(n===curBaby)return;
+      if(curBaby===2&&b2Raf){cancelAnimationFrame(b2Raf);b2Raf=0;}
+
+      document.querySelectorAll('.baby-scene.active').forEach(s=>s.classList.remove('active'));
+      document.querySelectorAll('.bopt').forEach(b=>b.classList.remove('active'));
+      document.querySelector(`.bopt[data-v="${n}"]`)?.classList.add('active');
+
+      curBaby=n;
+      const scene=document.getElementById(`baby${n}`);
+      if(!scene)return;
+      void scene.offsetWidth;
+
+      setTimeout(()=>{
+        scene.classList.add('active');
+        if(n===1)initB1();
+        if(n===2)initB2();
+        if(n===3)initB3();
+      },60);
+    }
+
+    function initB1(){
+      const c=document.getElementById('b1Sparks');
+      if(!c||c.children.length>0)return;
+      for(let i=0;i<25;i++){
+        const s=document.createElement('div');
+        s.className='b1-sp';
+        s.style.left=Math.random()*100+'%';
+        s.style.bottom=-Math.random()*15+'%';
+        s.style.animationDuration=(10+Math.random()*14)+'s';
+        s.style.animationDelay=Math.random()*12+'s';
+        const sz=2+Math.random()*3;
+        s.style.width=sz+'px';s.style.height=sz+'px';
+        c.appendChild(s);
+      }
+    }
+
+    function initB2(){
+      if(b2Raf){cancelAnimationFrame(b2Raf);b2Raf=0;}
+      const canvas=document.getElementById('b2Canvas') as HTMLCanvasElement;
+      if(!canvas)return;
+      const ctx=canvas.getContext('2d');
+      if(!ctx)return;
+      const W=canvas.width=window.innerWidth;
+      const H=canvas.height=window.innerHeight;
+
+      interface Star{x:number;y:number;r:number;a:number;ts:number;ph:number}
+      interface Shoot{x:number;y:number;ang:number;spd:number;len:number;a:number;life:number;ml:number}
+
+      const stars:Star[]=[];
+      for(let i=0;i<80;i++){
+        stars.push({x:Math.random()*W,y:Math.random()*H,r:.4+Math.random()*1.5,
+          a:.3+Math.random()*.7,ts:.005+Math.random()*.02,ph:Math.random()*Math.PI*2});
+      }
+      const shoots:Shoot[]=[];
+      let t=0;
+
+      function frame(){
+        ctx!.clearRect(0,0,W,H);t++;
+        for(const s of stars){
+          const al=s.a*(.5+.5*Math.sin(t*s.ts+s.ph));
+          ctx!.beginPath();ctx!.arc(s.x,s.y,s.r,0,Math.PI*2);
+          ctx!.fillStyle=`rgba(255,250,240,${al})`;ctx!.fill();
+        }
+        if(Math.random()<.006){
+          const ang=Math.PI*.15+Math.random()*Math.PI*.25;
+          shoots.push({x:Math.random()*W*.7,y:Math.random()*H*.3,ang,
+            spd:3+Math.random()*4,len:30+Math.random()*50,a:1,life:0,ml:35+Math.random()*30});
+        }
+        for(let i=shoots.length-1;i>=0;i--){
+          const sh=shoots[i];
+          sh.x+=Math.cos(sh.ang)*sh.spd;sh.y+=Math.sin(sh.ang)*sh.spd;
+          sh.life++;sh.a=1-sh.life/sh.ml;
+          if(sh.a<=0){shoots.splice(i,1);continue;}
+          const g=ctx!.createLinearGradient(sh.x,sh.y,
+            sh.x-Math.cos(sh.ang)*sh.len,sh.y-Math.sin(sh.ang)*sh.len);
+          g.addColorStop(0,`rgba(255,250,220,${sh.a})`);
+          g.addColorStop(1,'rgba(255,250,220,0)');
+          ctx!.beginPath();ctx!.moveTo(sh.x,sh.y);
+          ctx!.lineTo(sh.x-Math.cos(sh.ang)*sh.len,sh.y-Math.sin(sh.ang)*sh.len);
+          ctx!.strokeStyle=g;ctx!.lineWidth=1.5;ctx!.stroke();
+        }
+        b2Raf=requestAnimationFrame(frame);
+      }
+      frame();
+    }
+
+    function initB3(){
+      const c=document.getElementById('b3Dust');
+      if(!c||c.children.length>0)return;
+      for(let i=0;i<20;i++){
+        const d=document.createElement('div');
+        d.className='b3-dt';
+        d.style.left=Math.random()*100+'%';
+        d.style.bottom=-Math.random()*10+'%';
+        d.style.animationDuration=(12+Math.random()*16)+'s';
+        d.style.animationDelay=Math.random()*14+'s';
+        const sz=2+Math.random()*4;
+        d.style.width=sz+'px';d.style.height=sz+'px';
+        c.appendChild(d);
+      }
+    }
+
+    // Option button handlers
+    document.querySelectorAll('.bopt').forEach(b=>{
+      b.addEventListener('click',()=>{
+        const v=parseInt((b as HTMLElement).dataset.v||'1');
+        switchBaby(v);
+      });
+    });
 
     // ===== SHARED COUNTER =====
     function startTick(elId: string){
