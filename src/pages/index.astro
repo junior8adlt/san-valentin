@@ -53,7 +53,6 @@ for (let i = 0; i < 30; i++) {
 
   <!-- STATE 1: shared -->
   <div class="state-initial" id="stateInitial">
-    <div class="bg-particles" id="bgParticles1"></div>
     <div class="heart-wrapper" id="heartClick">
       <div class="main-heart">❤</div>
       <div class="heart-label">San Valentín</div>
@@ -115,7 +114,7 @@ for (let i = 0; i < 30; i++) {
           <path class="svg-heart-fill" d="M100,170 C40,120 0,80 0,50 C0,20 20,0 50,0 C70,0 90,15 100,35 C110,15 130,0 150,0 C180,0 200,20 200,50 C200,80 160,120 100,170Z"
             fill="#e31b52" stroke="none" opacity="0"/>
         </svg>
-        <p class="svg-label svg-link" id="svgLink">y nuestro amor creció<br/>tanto que ahora... <span class="svg-arrow">↓</span></p>
+        <p class="svg-label svg-link" id="svgLink">y nuestro amor creció<br/>tanto que ahora...<br/><span class="svg-hint">tócame ☝</span></p>
       </div>
 
       <div class="mob-counter" id="mobCounter">
@@ -209,13 +208,6 @@ for (let i = 0; i < 30; i++) {
     }
     .state-initial.fade-out{opacity:0;pointer-events:none}
     .state-initial.gone{display:none}
-    .bg-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
-    .bp{position:absolute;color:rgba(220,80,100,.25);animation:pFloat linear infinite}
-    @keyframes pFloat{
-      0%{transform:translateY(100vh) rotate(0);opacity:0}
-      10%{opacity:.6}90%{opacity:.6}
-      100%{transform:translateY(-10vh) rotate(360deg);opacity:0}
-    }
     .heart-wrapper{
       display:flex;flex-direction:column;align-items:center;
       cursor:pointer;user-select:none;z-index:2;
@@ -363,7 +355,7 @@ for (let i = 0; i < 30; i++) {
     /* SVG heart drawing */
     .mob-svg-wrap{
       opacity:0;margin:1.2rem 0;display:flex;flex-direction:column;align-items:center;
-      transition:opacity .6s ease;
+      transition:opacity .6s ease;cursor:pointer;
     }
     .mob-svg-wrap.show{opacity:1}
     .mob-svg-heart{width:120px;height:110px}
@@ -401,8 +393,8 @@ for (let i = 0; i < 30; i++) {
     /* SVG link clickable */
     .svg-link{cursor:pointer;text-align:center;line-height:1.6;font-size:1.15rem}
     .svg-link:active{transform:scale(.95)}
-    .svg-arrow{display:inline-block;font-size:.75rem;color:#e31b52;margin-left:.15rem;animation:arrBounce 1.5s ease-in-out infinite}
-    @keyframes arrBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+    .svg-hint{display:inline-block;font-size:.75rem;color:#e31b52;margin-top:.3rem;animation:hintPulse 2s ease-in-out infinite}
+    @keyframes hintPulse{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
 
     /* ============ STATE 3: BABY REVEAL ============ */
     .baby-state{position:fixed;inset:0;z-index:20;opacity:0;transition:opacity 1.2s ease}
@@ -452,8 +444,15 @@ for (let i = 0; i < 30; i++) {
       stroke-dasharray:900;stroke-dashoffset:900;
       filter:drop-shadow(0 0 8px rgba(232,170,185,.5));
     }
-    #baby1.active .b1-line{animation:b1Draw 3s cubic-bezier(.3,0,.2,1) .5s forwards}
-    @keyframes b1Draw{to{stroke-dashoffset:0}}
+    #baby1.active .b1-line{animation:b1Draw 6s linear .5s infinite}
+    @keyframes b1Draw{
+      0%{stroke-dashoffset:900;opacity:1}
+      50%{stroke-dashoffset:0;opacity:1}
+      65%{stroke-dashoffset:0;opacity:1}
+      76%{stroke-dashoffset:0;opacity:0}
+      77%{stroke-dashoffset:900;opacity:0}
+      100%{stroke-dashoffset:900;opacity:0}
+    }
     .b1-t1,.b1-t2{
       font-family:'Playfair Display',serif;text-align:center;
       color:rgba(232,185,195,.8);opacity:0;transform:translateY(10px);
@@ -595,18 +594,6 @@ for (let i = 0; i < 30; i++) {
   <script>
     const isMobile=window.innerWidth<=480;
 
-    // BG particles state 1
-    const pc=document.getElementById('bgParticles1');
-    for(let i=0;i<15;i++){
-      const p=document.createElement('div');
-      p.className='bp';p.textContent='♥';
-      p.style.left=Math.random()*100+'%';
-      p.style.fontSize=(12+Math.random()*18)+'px';
-      p.style.animationDuration=(10+Math.random()*15)+'s';
-      p.style.animationDelay=-(Math.random()*20)+'s';
-      pc?.appendChild(p);
-    }
-
     const startDate=new Date('2020-06-14T00:00:00');
     const si=document.getElementById('stateInitial');
 
@@ -692,8 +679,8 @@ for (let i = 0; i < 30; i++) {
       const svgW=document.getElementById('mobSvg');
       setTimeout(()=>svgW?.classList.add('show'),5800);
 
-      // SVG link → baby reveal
-      document.getElementById('svgLink')?.addEventListener('click',()=>showBabyReveal());
+      // SVG wrap + label → baby reveal
+      document.getElementById('mobSvg')?.addEventListener('click',()=>showBabyReveal());
 
       // Counter
       setTimeout(()=>{
