@@ -88,6 +88,14 @@ for (let i = 0; i < 30; i++) {
     </div>
   </div>
 
+  <!-- Desktop nav (appears after tree animation) -->
+  <div class="desk-nav hidden" id="deskNav">
+    <button class="dnav active" data-dv="0">Inicial</button>
+    <button class="dnav" data-dv="1">El Latido</button>
+    <button class="dnav" data-dv="2">Estrellas</button>
+    <button class="dnav" data-dv="3">Floreciendo</button>
+  </div>
+
   <!-- STATE 2 MOBILE: canvas hearts + confetti + text -->
   <div class="mob-state hidden" id="mobState">
     <canvas id="mobCanvas"></canvas>
@@ -298,7 +306,7 @@ for (let i = 0; i < 30; i++) {
 
     /* Hide desktop state2 on mobile, show mobile state2 */
     @media(max-width:480px){
-      .state-tree{display:none !important}
+      .state-tree,.desk-nav{display:none !important}
       .main-heart{font-size:4.5rem}
       .heart-label{font-size:1.6rem}
       .click-hint{font-size:.8rem}
@@ -398,6 +406,33 @@ for (let i = 0; i < 30; i++) {
     .svg-link:active{transform:scale(.95)}
     .svg-hint{display:inline-block;font-size:.75rem;color:#e31b52;margin-top:.3rem;animation:hintPulse 2s ease-in-out infinite}
     @keyframes hintPulse{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+
+    /* Desktop nav */
+    .desk-nav{
+      position:fixed;top:3%;left:50%;transform:translateX(-50%);z-index:30;
+      display:flex;gap:.35rem;
+      background:rgba(0,0,0,.3);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);
+      border-radius:25px;padding:.4rem .6rem;
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .desk-nav.hidden{display:none}
+    .desk-nav.show{animation:dnavIn .8s ease forwards}
+    @keyframes dnavIn{0%{opacity:0;transform:translateX(-50%) translateY(-15px)}100%{opacity:1;transform:translateX(-50%) translateY(0)}}
+    .dnav{
+      background:transparent;border:1px solid transparent;
+      color:rgba(255,255,255,.65);
+      padding:.35rem 1.1rem;border-radius:18px;
+      font-family:'Playfair Display',serif;font-size:.78rem;
+      cursor:pointer;transition:all .3s ease;letter-spacing:.3px;
+    }
+    .dnav:hover{background:rgba(255,255,255,.1);color:rgba(255,255,255,.9)}
+    .dnav.active{background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.2)}
+
+    .state-tree.tree-dimmed .tree-wrap,
+    .state-tree.tree-dimmed .love-text,
+    .state-tree.tree-dimmed .counter{
+      opacity:0 !important;transition:opacity .5s ease;pointer-events:none;
+    }
 
     /* ============ STATE 3: BABY REVEAL ============ */
     .baby-state{position:fixed;inset:0;z-index:20;opacity:0;transition:opacity 1.2s ease}
@@ -600,7 +635,15 @@ for (let i = 0; i < 30; i++) {
 
     /* Hide mobile state on desktop */
     @media(min-width:481px){
-      .mob-state,.baby-state{display:none !important}
+      .mob-state{display:none !important}
+      .baby-opts{display:none !important}
+      .b1-name,.b2-name,.b3-name{font-size:4rem}
+      .b1-t1,.b1-t2,.b2-t1,.b2-t2,.b3-t1,.b3-t2{font-size:1.25rem}
+      .b1-t3{font-size:1.5rem}
+      .b2-sub,.b3-sub{font-size:1.35rem}
+      .b1-ecg{max-width:500px}
+      .b3-flower-area{width:200px;height:200px}
+      .b1-heart,.b2-heart{font-size:2rem}
     }
   </style>
 
@@ -642,10 +685,16 @@ for (let i = 0; i < 30; i++) {
       lt?.querySelectorAll('.tl').forEach((l,i)=>setTimeout(()=>l.classList.add('show'),3800+i*900));
       setTimeout(()=>{co?.classList.add('show');startTick('ct')},7500);
       setTimeout(desktopSpawn,5000);
+      setTimeout(()=>{
+        const dn=document.getElementById('deskNav');
+        if(dn){dn.classList.remove('hidden');requestAnimationFrame(()=>dn.classList.add('show'))}
+      },8500);
     }
 
+    let deskSpawnId=0;
     function desktopSpawn(){
-      setInterval(()=>{
+      if(deskSpawnId)clearInterval(deskSpawnId);
+      deskSpawnId=window.setInterval(()=>{
         if(!tw)return;
         const r=tw.getBoundingClientRect();
         if(r.width===0)return;
@@ -917,13 +966,44 @@ for (let i = 0; i < 30; i++) {
       }
     }
 
-    // Option button handlers
+    // Option button handlers (mobile)
     document.querySelectorAll('.bopt').forEach(b=>{
       b.addEventListener('click',()=>{
         const v=parseInt((b as HTMLElement).dataset.v||'1');
         switchBaby(v);
       });
     });
+
+    // Desktop nav handlers
+    document.querySelectorAll('.dnav').forEach(b=>{
+      b.addEventListener('click',()=>{
+        const v=parseInt((b as HTMLElement).dataset.dv||'0');
+        switchDeskView(v);
+      });
+    });
+
+    function switchDeskView(v:number){
+      document.querySelectorAll('.dnav').forEach(b=>b.classList.remove('active'));
+      document.querySelector(`.dnav[data-dv="${v}"]`)?.classList.add('active');
+
+      const bs=document.getElementById('babyState');
+      const st=document.getElementById('stateTree');
+
+      if(v===0){
+        // Back to tree
+        if(bs){bs.classList.remove('show');setTimeout(()=>bs.classList.add('hidden'),600);}
+        st?.classList.remove('tree-dimmed');
+        if(!deskSpawnId)desktopSpawn();
+        curBaby=0;
+      } else {
+        // Show baby concept
+        st?.classList.add('tree-dimmed');
+        if(deskSpawnId){clearInterval(deskSpawnId);deskSpawnId=0;}
+        if(bs){bs.classList.remove('hidden');requestAnimationFrame(()=>bs.classList.add('show'));}
+        curBaby=0;
+        switchBaby(v);
+      }
+    }
 
     // ===== SHARED COUNTER =====
     function startTick(elId: string){
